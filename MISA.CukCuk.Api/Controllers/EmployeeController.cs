@@ -158,9 +158,18 @@ namespace MISA.CukCuk.Api.Controllers
 
         // DELETE api/<CustomerController>/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(Guid id)
         {
-            return Ok();
+            EmployeeBL employeeBL = new EmployeeBL();
+            var res = employeeBL.Delete<Employee>(id);
+            if (res > 0)
+            {
+                return Ok(res);
+            }
+            else
+            {
+                return NoContent();
+            }
         }
     }
 }
