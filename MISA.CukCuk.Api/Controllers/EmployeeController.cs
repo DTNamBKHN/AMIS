@@ -111,6 +111,39 @@ namespace MISA.CukCuk.Api.Controllers
             }
         }
 
+        //GET api/<EmployeeController>/search
+        [HttpGet("search/{search_string}")]
+        public IActionResult Search(string search_string)
+        {
+            // 1. Khai báo thông tin kết nối tới Database:
+            var connectionString = "" +
+                "Host = 47.241.69.179;" +
+                "Port = 3306;" +
+                "Database= 15B_MS218_CukCuk_DTNAM;" +
+                "User Id = dev;" +
+                "Password= 12345678";
+
+            // 2. Khởi tạo kết nối:
+            IDbConnection dbConnection = new MySqlConnection(connectionString);
+
+            // 3. Tương tác với Database (lấy dữ liệu, sửa dữ liệu, xóa dữ liệu)
+            var sqlCommand = "Proc_Search";
+            DynamicParameters dynamicParameters = new DynamicParameters();
+            dynamicParameters.Add("@search_string", search_string);
+            var employees = dbConnection.Query<Employee>(sqlCommand, param: dynamicParameters, commandType: CommandType.StoredProcedure);
+            // 4. Kiểm tra dữ liệu và trả về cho Client
+            // - Nếu có dữ liệu thì trả về 200 kèm theo dữ liệu
+            // - Không có dữ liệu thì trả về 204:
+            if (employees.Count() > 0)
+            {
+                return Ok(employees);
+            }
+            else
+            {
+                return NoContent();
+            }
+        }
+
         // GET api/<EmployeeController>/5
         [HttpGet("{id}")]
         public IActionResult Get(Guid id)
