@@ -33,7 +33,7 @@ namespace MISA.CukCuk.Api
                                   builder =>
                                   {
                                       builder.WithOrigins("https://localhost:44369", "http://localhost:8080")
-                                      .WithMethods("PUT", "DELETE", "GET"); 
+                                      .AllowAnyHeader().AllowAnyMethod();
                                   });
             });
 

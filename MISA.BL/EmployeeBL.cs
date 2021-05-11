@@ -88,10 +88,14 @@ namespace MISA.BL
 
                 // 3. Kiểm tra Email có đúng định dạng hay không?
                 var emailTemplate = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
-                if (!Regex.IsMatch(employee.Email, emailTemplate))
+                if(employee.Email != null)
                 {
-                    throw new GuardException<Employee>("Email không đúng định dạng, vui lòng kiểm tra lại", null);
+                    if (!Regex.IsMatch(employee.Email, emailTemplate))
+                    {
+                        throw new GuardException<Employee>("Email không đúng định dạng, vui lòng kiểm tra lại", null);
+                    }
                 }
+                
             }
         }
     }

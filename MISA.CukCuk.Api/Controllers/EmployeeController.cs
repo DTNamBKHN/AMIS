@@ -18,7 +18,7 @@ namespace MISA.CukCuk.Api.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
-        // GET: api/<CustomerController>
+        // GET: api/<EmployeeController>
         [HttpGet]
         public IActionResult Get()
         {
@@ -79,7 +79,39 @@ namespace MISA.CukCuk.Api.Controllers
             }
         }
 
-        // GET api/<CustomerController>/5
+        //GET new EmployeeCode
+        [HttpGet("NewEmployeeCode")]
+        public IActionResult GetNewEmployeeCode()
+        {
+            // 1. Khai báo thông tin kết nối tới Database:
+            var connectionString = "" +
+                "Host = 47.241.69.179;" +
+                "Port = 3306;" +
+                "Database= 15B_MS218_CukCuk_DTNAM;" +
+                "User Id = dev;" +
+                "Password= 12345678";
+
+            // 2. Khởi tạo kết nối:
+            IDbConnection dbConnection = new MySqlConnection(connectionString);
+
+            // 3. Tương tác với Database (lấy dữ liệu, sửa dữ liệu, xóa dữ liệu)
+            var sqlCommand = "Proc_GenerateNewEmployeeCode";
+
+            var newEmployeeCode = dbConnection.Query<string>(sqlCommand, commandType: CommandType.StoredProcedure);
+            // 4. Kiểm tra dữ liệu và trả về cho Client
+            // - Nếu có dữ liệu thì trả về 200 kèm theo dữ liệu
+            // - Không có dữ liệu thì trả về 204:
+            if (newEmployeeCode != null)
+            {
+                return Ok(newEmployeeCode);
+            }
+            else
+            {
+                return NoContent();
+            }
+        }
+
+        // GET api/<EmployeeController>/5
         [HttpGet("{id}")]
         public IActionResult Get(Guid id)
         {
@@ -96,7 +128,7 @@ namespace MISA.CukCuk.Api.Controllers
             }
         }
 
-        // POST api/<CustomerController>
+        // POST api/<EmployeeController>
         [HttpPost]
         public IActionResult Post([FromBody] Employee employee)
         {
@@ -140,7 +172,7 @@ namespace MISA.CukCuk.Api.Controllers
 
         }
 
-        // PUT api/<CustomerController>/5
+        // PUT api/<EmployeeController>/5
         [HttpPut("{id}")]
         public IActionResult Put(Guid id, [FromBody] Employee employee)
         {
@@ -156,7 +188,7 @@ namespace MISA.CukCuk.Api.Controllers
             }
         }
 
-        // DELETE api/<CustomerController>/5
+        // DELETE api/<EmployeeController>/5
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
