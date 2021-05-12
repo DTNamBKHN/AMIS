@@ -80,11 +80,11 @@ namespace MISA.BL
                     throw new GuardException<Employee>("Mã nhân viên không được phép để trống.", employee);
                 }
                 // 2. Check mã khách hàng đã tồn tại hay chưa?
-                var isExists = employeeDL.CheckEmployeeCodeExist(employee.EmployeeCode);
-                if (isExists == true)
-                {
-                    throw new GuardException<Employee>("Mã nhân viên đã tồn tạo trong hệ thống, vui lòng kiểm tra lại", null);
-                }
+                //var isExists = employeeDL.CheckEmployeeCodeExist(employee.EmployeeCode);
+                //if (isExists == true)
+                //{
+                //    throw new GuardException<Employee>("Mã nhân viên đã tồn tạo trong hệ thống, vui lòng kiểm tra lại", null);
+                //}
 
                 // 3. Kiểm tra Email có đúng định dạng hay không?
                 var emailTemplate = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";

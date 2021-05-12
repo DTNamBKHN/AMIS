@@ -38,7 +38,7 @@ namespace MISA.CukCuk.Api.Controllers
 
         }
 
-        [HttpGet("Paging")]
+        [HttpGet("Paging/{pageIndex}/{pageSize}")]
         public IActionResult GetPaging(int pageIndex, int pageSize)
         {
             // 1. Khai báo thông tin kết nối tới Database:
@@ -56,13 +56,13 @@ namespace MISA.CukCuk.Api.Controllers
             var sqlCommand = "Proc_GetEmployeePaging";
             var param = new
             {
-                m_PageIndex = 1,
-                m_PageSize = 10
+                m_PageIndex = pageIndex,
+                m_PageSize = pageSize
             };
 
             DynamicParameters dynamicParameters = new DynamicParameters();
-            dynamicParameters.Add("@m_PageIndex", 1);
-            dynamicParameters.Add("@m_PageSize", 10);
+            dynamicParameters.Add("@m_PageIndex", pageIndex);
+            dynamicParameters.Add("@m_PageSize", pageSize);
 
             var employees = dbConnection.Query<Employee>(sqlCommand, param: dynamicParameters, commandType: CommandType.StoredProcedure);
 
@@ -72,6 +72,34 @@ namespace MISA.CukCuk.Api.Controllers
             if (employees.Count() > 0)
             {
                 return Ok(employees);
+            }
+            else
+            {
+                return NoContent();
+            }
+        }
+
+        //Get total employee number
+        [HttpGet("total")]
+        public IActionResult GetTotalNumber()
+        {
+            // 1. Khai báo thông tin kết nối tới Database:
+            var connectionString = "" +
+                "Host = 47.241.69.179;" +
+                "Port = 3306;" +
+                "Database= 15B_MS218_CukCuk_DTNAM;" +
+                "User Id = dev;" +
+                "Password= 12345678";
+
+            // 2. Khởi tạo kết nối:
+            IDbConnection dbConnection = new MySqlConnection(connectionString);
+
+            // 3. Tương tác với Database (lấy dữ liệu, sửa dữ liệu, xóa dữ liệu)
+            var sqlCommand = "Proc_GetTotalEmployee";
+            var result = dbConnection.Query<int>(sqlCommand, commandType: CommandType.StoredProcedure);
+            if (result != null)
+            {
+                return Ok(result);
             }
             else
             {
@@ -104,6 +132,39 @@ namespace MISA.CukCuk.Api.Controllers
             if (newEmployeeCode != null)
             {
                 return Ok(newEmployeeCode);
+            }
+            else
+            {
+                return NoContent();
+            }
+        }
+
+        //Check code exist
+        [HttpGet("checkcodeexist/{employeeCode}")]
+        public IActionResult CheckCodeExist(string employeeCode)
+        {
+            // 1. Khai báo thông tin kết nối tới Database:
+            var connectionString = "" +
+                "Host = 47.241.69.179;" +
+                "Port = 3306;" +
+                "Database= 15B_MS218_CukCuk_DTNAM;" +
+                "User Id = dev;" +
+                "Password= 12345678";
+
+            // 2. Khởi tạo kết nối:
+            IDbConnection dbConnection = new MySqlConnection(connectionString);
+
+            // 3. Tương tác với Database (lấy dữ liệu, sửa dữ liệu, xóa dữ liệu)
+            var sqlCommand = "Proc_CheckEmployeeCodeExists";
+            DynamicParameters dynamicParameters = new DynamicParameters();
+            dynamicParameters.Add("@m_EmployeeCode", employeeCode);
+            var result = dbConnection.Query<int>(sqlCommand, param: dynamicParameters, commandType: CommandType.StoredProcedure);
+            // 4. Kiểm tra dữ liệu và trả về cho Client
+            // - Nếu có dữ liệu thì trả về 200 kèm theo dữ liệu
+            // - Không có dữ liệu thì trả về 204:
+            if (result.Count() > 0)
+            {
+                return Ok(result);
             }
             else
             {
